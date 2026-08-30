@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DrishtiSetu — Connecting Patients to early detection</title>
+<link rel="preconnect" href="https://cdnjs.cloudflare.com">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+  :root {
+    --ink: #16302c;
+    --paper: #f6f3ec;
+    --panel: #ffffff;
+    --teal: #1f6f5c;
+    --teal-deep: #123f34;
+    --amber: #c17f2a;
+    --rose: #a8443a;
+    --line: #d8d1c0;
+    --muted: #6b6357;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Source Sans 3', sans-serif;
+    min-height: 100vh;
+    padding: 32px 20px 60px;
+  }
+
+  .wrap { max-width: 980px; margin: 0 auto; }
+
+  header.top {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    border-bottom: 2px solid var(--ink);
+    padding-bottom: 18px;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .brand { display: flex; align-items: baseline; gap: 12px; }
+  .brand h1 {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 2.1rem;
+    letter-spacing: -0.01em;
+  }
+  .brand .mark {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem;
+    color: var(--teal);
+    border: 1px solid var(--teal);
+    padding: 2px 7px;
+    border-radius: 3px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .tagline { font-size: 0.92rem; color: var(--muted); font-style: italic; }
+  .ps-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--muted);
+    text-align: right;
+  }
+
+  .note {
+    background: #fdf6e3;
+    border: 1px solid #e6d9a8;
+    color: #6b5a12;
+    font-size: 0.82rem;
+    padding: 10px 14px;
+    border-radius: 6px;
+    margin: 18px 0 30px;
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+  }
+  .note i { margin-top: 2px; }
+
+  /* Stepper */
+  .stepper {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 28px;
+    flex-wrap: wrap;
+  }
+  .step-pill {
+    flex: 1;
+    min-width: 110px;
+    text-align: center;
+    padding: 9px 6px;
+    font-size: 0.72rem;
+    font-family: 'JetBrains Mono', monospace;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    border: 1px solid var(--line);
+    background: var(--panel);
+    color: var(--muted);
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    position: relative;
+  }
+  .step-pill.active {
+    background: var(--teal-deep);
+    color: var(--paper);
+    border-color: var(--teal-deep);
+  }
+  .step-pill.done {
+    background: #eaf0ea;
+    color: var(--teal-deep);
+    border-color: var(--teal);
+  }
+  .step-pill.done::after {
+    content: "✓";
+    margin-left: 5px;
+  }
+
+  .panel {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 34px;
+    min-height: 420px;
+    animation: fadeIn 0.4s ease;
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .panel h2 {
+    font-family: 'Fraunces', serif;
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+  .panel .sub { color: var(--muted); font-size: 0.92rem; margin-bottom: 26px; }
+
+  /* Step 1: capture */
+  .capture-zone {
+    border: 2px dashed var(--line);
+    border-radius: 10px;
+    padding: 50px 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+  }
+  .capture-zone:hover { border-color: var(--teal); background: #f7faf8; }
+  .capture-zone i { font-size: 2.4rem; color: var(--teal); margin-bottom: 14px; display: block; }
+  .capture-zone .main-txt { font-weight: 600; margin-bottom: 4px; }
+  .capture-zone .sub-txt { font-size: 0.85rem; color: var(--muted); }
+  .device-row {
+    display: flex;
+    gap: 14px;
+    margin-top: 22px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .device-chip {
+    font-size: 0.78rem;
+    padding: 6px 14px;
+    border-radius: 20px;
+    border: 1px solid var(--line);
+    color: var(--muted);
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  /* Step 2: quality */
+  .quality-grid {
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+    gap: 30px;
+    align-items: center;
+  }
+  .fundus-mock {
+    width: 100%;
+    aspect-ratio: 1/1;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 35%, #7a2f1f 0%, #4a1a10 55%, #2a0d08 100%);
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 0 0 6px var(--panel), 0 0 0 8px var(--line);
+    margin: 0 auto;
+    max-width: 280px;
+  }
+  .fundus-mock .disc { position:absolute; width:22%; height:22%; background:#e8c99a; border-radius:50%; top:42%; left:28%; opacity:0.85; }
+  .fundus-mock .vessel { position:absolute; background:#8b2e1f; border-radius:2px; opacity:0.6; }
+  .qc-list { display: flex; flex-direction: column; gap: 14px; }
+  .qc-item { display: flex; align-items: center; gap: 12px; font-size: 0.92rem; }
+  .qc-item .dot {
+    width: 20px; height: 20px; border-radius: 50%;
+    background: var(--teal); color: white;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.65rem; flex-shrink: 0;
+  }
+  .qc-item .label { font-weight: 600; }
+  .qc-item .val { color: var(--muted); margin-left: auto; font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; }
+
+  /* Step 3: analysis */
+  .analysis-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
+  .heatmap-mock {
+    aspect-ratio: 1/1;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 35%, #7a2f1f 0%, #4a1a10 55%, #2a0d08 100%);
+    position: relative;
+    overflow: hidden;
+    margin: 0 auto;
+    max-width: 280px;
+    box-shadow: 0 0 0 6px var(--panel), 0 0 0 8px var(--line);
+  }
+  .hotspot {
+    position: absolute;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255,196,0,0.85) 0%, rgba(255,196,0,0) 70%);
+  }
+  .finding-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--line);
+    font-size: 0.88rem;
+  }
+  .finding-row:last-child { border-bottom: none; }
+  .finding-row .tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    background: #eaf0ea;
+    color: var(--teal-deep);
+    padding: 2px 8px;
+    border-radius: 3px;
+  }
+
+  /* Step 4: grade */
+  .grade-hero {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+    padding: 26px;
+    background: #f7f4ec;
+    border-radius: 10px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+  }
+  .grade-badge {
+    font-family: 'Fraunces', serif;
+    font-size: 3.2rem;
+    font-weight: 600;
+    color: var(--amber);
+    line-height: 1;
+  }
+  .grade-meta .grade-name { font-weight: 700; font-size: 1.1rem; margin-bottom: 4px; }
+  .grade-meta .grade-desc { color: var(--muted); font-size: 0.88rem; }
+  .confidence-bar-wrap { margin-top: 20px; }
+  .confidence-bar-wrap .cb-label {
+    display: flex; justify-content: space-between;
+    font-size: 0.78rem; color: var(--muted); margin-bottom: 6px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .confidence-track {
+    height: 10px; background: var(--line); border-radius: 6px; overflow: hidden;
+  }
+  .confidence-fill {
+    height: 100%; background: linear-gradient(90deg, var(--teal), var(--amber));
+    width: 0%; transition: width 1.2s ease;
+    border-radius: 6px;
+  }
+  .escalate-box {
+    margin-top: 18px;
+    padding: 14px 16px;
+    background: #fdf1ec;
+    border: 1px solid #e8c4b6;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    color: var(--rose);
+    display: none;
+    align-items: center;
+    gap: 10px;
+  }
+
+  /* Step 5: report/chat */
+  .chat-window {
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .chat-head {
+    background: var(--teal-deep);
+    color: var(--paper);
+    padding: 12px 18px;
+    font-size: 0.85rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .lang-toggle {
+    display: flex; gap: 6px;
+  }
+  .lang-btn {
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.3);
+    color: var(--paper);
+    font-size: 0.7rem;
+    padding: 3px 9px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .lang-btn.active { background: var(--paper); color: var(--teal-deep); }
+  .chat-body {
+    padding: 22px;
+    background: #fbfaf6;
+    font-size: 0.95rem;
+    line-height: 1.65;
+    min-height: 160px;
+  }
+  .chat-body .from-ai {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    padding: 14px 16px;
+    border-radius: 10px;
+    max-width: 90%;
+  }
+  .quick-q { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 16px; }
+  .quick-q button {
+    font-size: 0.78rem;
+    padding: 7px 13px;
+    border-radius: 20px;
+    border: 1px solid var(--teal);
+    color: var(--teal-deep);
+    background: transparent;
+    cursor: pointer;
+    font-family: 'Source Sans 3', sans-serif;
+  }
+  .quick-q button:hover { background: var(--teal); color: white; }
+
+  .next-steps {
+    margin-top: 22px;
+    padding: 16px 18px;
+    background: #eaf0ea;
+    border-radius: 8px;
+    font-size: 0.87rem;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+  }
+
+  /* nav buttons */
+  .nav-row {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+  }
+  .nav-btn {
+    font-family: 'Source Sans 3', sans-serif;
+    font-weight: 600;
+    font-size: 0.88rem;
+    padding: 11px 22px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    transition: opacity 0.2s;
+  }
+  .nav-btn.primary { background: var(--teal-deep); color: var(--paper); }
+  .nav-btn.ghost { background: transparent; color: var(--muted); border: 1px solid var(--line); }
+  .nav-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+  .nav-btn:hover:not(:disabled) { opacity: 0.85; }
+
+  @media (max-width: 700px) {
+    .quality-grid, .analysis-grid { grid-template-columns: 1fr; }
+    .panel { padding: 22px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="top">
+    <div class="brand">
+      <h1>DrishtiSetu-Connecting Patients to early detection</h1>
+      <span class="mark">Concept Demo</span>
+    </div>
+    <div class="ps-tag">SIH26038<br>Explainable AI · DR Screening</div>
+  </header>
+  <p class="tagline">A field-ready screening companion for diabetic retinopathy — built for the primary healthcare worker, not the specialist.</p>
+
+  <div class="note">
+    <i class="fa-solid fa-circle-info"></i>
+    <span>This is a clickable UI/workflow prototype with simulated data — built to demonstrate the intended user experience and system flow for the pitch. It is not the trained MATLAB classification model.</span>
+  </div>
+
+  <div class="stepper" id="stepper"></div>
+
+  <div class="panel" id="panel"></div>
+
+  <div class="nav-row">
+    <button class="nav-btn ghost" id="backBtn" onclick="go(-1)">Back</button>
+    <button class="nav-btn primary" id="nextBtn" onclick="go(1)">Continue</button>
+  </div>
+
+</div>
+
+<script>
+const steps = ["Capture", "Quality Check", "Analysis", "Severity Grade", "Patient Report"];
+let current = 0;
+let capturedImage = null;
+
+function handleImage(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    capturedImage = e.target.result;
+    render();
+  };
+  reader.readAsDataURL(file);
+}
+
+function renderStepper() {
+  const s = document.getElementById('stepper');
+  s.innerHTML = steps.map((label, i) => {
+    let cls = 'step-pill';
+    if (i === current) cls += ' active';
+    else if (i < current) cls += ' done';
+    return `<div class="${cls}" onclick="jump(${i})">${label}</div>`;
+  }).join('');
+}
+
+function jump(i) {
+  if (i <= current) { current = i; render(); }
+}
+
+function go(dir) {
+  const next = current + dir;
+  if (next < 0 || next >= steps.length) return;
+  current = next;
+  render();
+}
+
+function render() {
+  renderStepper();
+  document.getElementById('panel').innerHTML = panels[current]();
+  document.getElementById('backBtn').disabled = current === 0;
+  document.getElementById('nextBtn').textContent = current === steps.length - 1 ? 'Restart' : 'Continue';
+  document.getElementById('nextBtn').disabled = (current === 0 && !capturedImage);
+  document.getElementById('nextBtn').onclick = current === steps.length - 1
+    ? () => { current = 0; capturedImage = null; render(); }
+    : () => go(1);
+
+  if (current === 2) setTimeout(() => document.querySelectorAll('.hotspot').forEach(h => h.style.opacity = 1), 100);
+  if (current === 3) setTimeout(() => {
+    const fill = document.querySelector('.confidence-fill');
+    if (fill) fill.style.width = '87%';
+    const esc = document.querySelector('.escalate-box');
+    if (esc) esc.style.display = 'flex';
+  }, 150);
+}
+
+const panels = [
+  // Step 1: Capture
+  () => `
+    <h2>Capture retinal image</h2>
+    <p class="sub">Position the smartphone + lens attachment in front of the patient's eye, or upload an existing fundus image.</p>
+    <div class="capture-zone" id="dropZone" onclick="document.getElementById('fileInput').click()">
+      <i class="fa-solid fa-camera-retro"></i>
+      <div class="main-txt">Take a photo or click to upload a fundus image</div>
+      <div class="sub-txt">Accepts camera capture on mobile · JPG / PNG</div>
+    </div>
+    <input type="file" id="fileInput" accept="image/*" capture="environment" style="display:none" onchange="handleImage(event)">
+    <div class="device-row">
+      <span class="device-chip">Smartphone Camera</span>
+      <span class="device-chip">20D Ophthalmic Lens</span>
+      <span class="device-chip">LED Ring Light</span>
+      <span class="device-chip">Local Network Transfer</span>
+    </div>
+    <div id="imgPreviewWrap" style="display:${capturedImage ? 'block' : 'none'};margin-top:20px;text-align:center;">
+      <img id="imgPreview" src="${capturedImage || ''}" style="max-width:220px;max-height:220px;border-radius:12px;border:1px solid var(--line);box-shadow:0 2px 10px rgba(0,0,0,0.08);">
+      <div style="margin-top:10px;font-size:0.82rem;color:var(--muted);">Image ready — continue to run quality checks.</div>
+    </div>
+  `,
+  // Step 2: Quality Check
+  () => `
+    <h2>Image quality assessment</h2>
+    <p class="sub">Module 1 — checking focus, illumination, and field of view before analysis proceeds.</p>
+    <div class="quality-grid">
+      <div class="fundus-mock" style="${capturedImage ? `background:none;` : ''}">
+        ${capturedImage
+          ? `<img src="${capturedImage}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">`
+          : `<div class="disc"></div>
+             <div class="vessel" style="width:2px;height:60px;top:30%;left:48%;transform:rotate(25deg);"></div>
+             <div class="vessel" style="width:2px;height:50px;top:50%;left:55%;transform:rotate(-40deg);"></div>
+             <div class="vessel" style="width:2px;height:45px;top:55%;left:40%;transform:rotate(60deg);"></div>`
+        }
+      </div>
+      <div class="qc-list">
+        <div class="qc-item"><div class="dot">✓</div><span class="label">Focus</span><span class="val">Adequate</span></div>
+        <div class="qc-item"><div class="dot">✓</div><span class="label">Illumination</span><span class="val">Within range</span></div>
+        <div class="qc-item"><div class="dot">✓</div><span class="label">Field of view</span><span class="val">Complete</span></div>
+        <div class="qc-item"><div class="dot" style="background:var(--amber)">~</div><span class="label">Enhancement applied</span><span class="val">CLAHE + denoise</span></div>
+        <div class="qc-item"><div class="dot">✓</div><span class="label">Gradeable</span><span class="val">Yes — proceed</span></div>
+      </div>
+    </div>
+  `,
+  // Step 3: Analysis
+  () => `
+    <h2>Structural analysis</h2>
+    <p class="sub">Module 2 — segmenting retinal structures and flagging disease markers.</p>
+    <div class="analysis-grid">
+      <div class="heatmap-mock" style="${capturedImage ? `background:none;` : ''}">
+        ${capturedImage ? `<img src="${capturedImage}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">` : ''}
+        <div class="hotspot" style="width:40px;height:40px;top:30%;left:55%;opacity:0;transition:opacity 0.6s;"></div>
+        <div class="hotspot" style="width:30px;height:30px;top:60%;left:35%;opacity:0;transition:opacity 0.6s 0.2s;"></div>
+        <div class="hotspot" style="width:25px;height:25px;top:45%;left:65%;opacity:0;transition:opacity 0.6s 0.4s;"></div>
+      </div>
+      <div>
+        <div class="finding-row"><span>Microaneurysms detected</span><span class="tag">2 · superior nasal</span></div>
+        <div class="finding-row"><span>Hemorrhages</span><span class="tag">1 · inferior temporal</span></div>
+        <div class="finding-row"><span>Exudates</span><span class="tag">None detected</span></div>
+        <div class="finding-row"><span>Neovascularization</span><span class="tag">None detected</span></div>
+        <div class="finding-row"><span>Vessel segmentation</span><span class="tag">Complete</span></div>
+      </div>
+    </div>
+  `,
+  // Step 4: Grade
+  () => `
+    <h2>Severity grading</h2>
+    <p class="sub">Module 3 — classification against the International Clinical DR Severity Scale.</p>
+    <div class="grade-hero">
+      <div class="grade-badge">2</div>
+      <div class="grade-meta">
+        <div class="grade-name">Moderate Non-Proliferative DR</div>
+        <div class="grade-desc">Referable case — recommend specialist review within 3–6 months</div>
+      </div>
+    </div>
+    <div class="confidence-bar-wrap">
+      <div class="cb-label"><span>Model confidence</span><span>87%</span></div>
+      <div class="confidence-track"><div class="confidence-fill"></div></div>
+    </div>
+    <div class="escalate-box">
+      <i class="fa-solid fa-triangle-exclamation"></i>
+      <span>Confidence above escalation threshold — case is <strong>not</strong> auto-routed. Below 80% confidence, cases are automatically escalated for mandatory human review.</span>
+    </div>
+  `,
+  // Step 5: Report/Chat
+  () => `
+    <h2>Patient report</h2>
+    <p class="sub">Explainer layer — translates the structured result into plain, multilingual language.</p>
+    <div class="chat-window">
+      <div class="chat-head">
+        <span>Report Explainer</span>
+        <div class="lang-toggle">
+          <button class="lang-btn active">English</button>
+          <button class="lang-btn">অসমীয়া</button>
+          <button class="lang-btn">हिंदी</button>
+        </div>
+      </div>
+      <div class="chat-body">
+        <div class="from-ai">
+          Your eye scan shows early-to-moderate signs of diabetic eye disease (Level 2 of 4). This means some small blood vessels in your eye have been affected, but your vision is not at immediate risk. We recommend seeing an eye specialist within the next 3–6 months.
+        </div>
+        <div class="quick-q">
+          <button>What does Level 2 mean?</button>
+          <button>Why was this flagged?</button>
+          <button>When should I return?</button>
+        </div>
+      </div>
+    </div>
+    <div class="next-steps">
+      <i class="fa-solid fa-route" style="margin-top:2px;color:var(--teal-deep);"></i>
+      <span><strong>Next step:</strong> Referral logged. Nearest ophthalmology facility notified. Follow-up screening scheduled in 4 months, consistent with Level 2 clinical guidelines.</span>
+    </div>
+  `,
+];
+
+render();
+</script>
+</body>
+</html>
